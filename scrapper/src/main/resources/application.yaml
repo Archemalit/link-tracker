@@ -1,0 +1,103 @@
+app:
+  github-token: ${GITHUB_TOKEN}
+  stackoverflow:
+    key: ${SO_TOKEN_KEY}
+    access-token: ${SO_ACCESS_TOKEN}
+  message-transport: kafka
+  timeout:
+    api:
+      connection: 200
+      read: 2000
+    bot:
+      connection: 200
+      read: 1000
+  retry:
+    max-attempts: 3
+    backoff: 500
+  rate-limiter:
+    scrapper:
+      enabled: true
+      limitForPeriod: 3
+      limitRefreshPeriod: 5
+      timeoutDuration: 0
+  circuit-breaker:
+    sender:
+      sliding-window-size: 5
+      failure-rate-threshold: 50
+      wait-duration-in-open-state: 10
+      permitted-number-of-calls-in-half-open-state: 2
+      minimum-number-of-calls: 5
+      automatic-transition-from-open-to-half-open-enabled: true
+
+
+#logging:
+#  structured:
+#    format:
+#      console: ecs
+#      file: ecs
+#  file:
+#    name: log.json
+
+spring:
+  application:
+    name: Scrapper
+  profiles:
+    active: jpa
+  datasource:
+    url: jdbc:postgresql://localhost:5732/link-scrapper
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+  redis:
+    host: redis
+    port: 6379
+
+kafka:
+  producer:
+    bootstrapServers: localhost:9092
+    client-id: bot
+    acksMode: all
+    deliveryTimeout: 60s
+    lingerMs: 12_000
+    batchSize: 100_000
+  topic:
+    name: scrapper.update.in
+    partitions: 1
+    replicas: 1
+
+server:
+  port: 8081
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+
+client:
+  bot:
+    base-url: http://localhost:8080
+    updates: /updates
+
+api:
+  url:
+    stackoverflow: https://api.stackexchange.com/2.3/questions
+    github: https://api.github.com/repos
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+      exposure:
+        include:
+          - prometheus

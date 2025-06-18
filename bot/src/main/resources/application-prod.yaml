@@ -1,0 +1,68 @@
+app:
+  telegram-token: ${TELEGRAM_TOKEN}
+  message-transport: kafka
+  timeout:
+    scrapper:
+      connection: 200
+      read: 2000
+  circuit-breaker:
+    scrapper:
+      sliding-window-size: 10
+      minimum-number-of-calls: 10
+      failure-rate-threshold: 50
+      wait-duration-in-open-state: 5
+      permitted-number-of-calls-in-half-open-state: 2
+
+#logging:
+#  structured:
+#    format:
+#      console: ecs
+#      file: ecs
+#  file:
+#    name: log.json
+
+spring:
+  application:
+    name: Bot
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  kafka:
+    bootstrap-servers: kafka:29092
+
+kafka:
+  consumer:
+    bootstrap-servers: kafka:29092
+    group-id: bot
+    auto-offset-reset: earliest
+    max-poll-interval-ms: 300_000
+    enable-auto-commit: false
+    concurrency: 1
+  producer:
+    bootstrap-servers: kafka:29092
+    client-id: bot
+    acks-mode: 0
+    delivery-timeout: 60s
+    linger-ms: 1_000
+    batch-size: 100_000
+  topic:
+    name: scrapper.update.in
+    partitions: 1
+    replicas: 1
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+
+client:
+  scrapper:
+    base-url: http://scrapper:8081
+    sub-chat-url: /tg-chat
+    sub-link-url: /links
