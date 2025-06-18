@@ -44,7 +44,6 @@ SO_TOKEN_KEY=КЛЮЧ_STACKOVERFLOW
 
 ## Архитектура
 
-
 ## Контакты
 
 ```
