@@ -44,6 +44,8 @@ SO_TOKEN_KEY=КЛЮЧ_STACKOVERFLOW
 
 ## Архитектура
 
+<img width="964" alt="Снимок экрана 2025-06-18 в 14 04 26" src="https://github.com/user-attachments/assets/aa093c15-ec84-4076-a25f-50d7994eb46e" />
+
 ## Контакты
 
 ```
